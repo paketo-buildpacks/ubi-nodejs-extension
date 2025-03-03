@@ -85,7 +85,7 @@ func CreateConfigTomlFileContent(defaultNodeVersion string, nodejsStacks []Stack
 			"id":      "node",
 			"stacks":  []string{stackId},
 			"version": fmt.Sprintf("%s.1000", stack.NodeVersion),
-			"source":  fmt.Sprintf("paketocommunity/run-nodejs-%s-ubi-base", stack.NodeVersion),
+			"source":  fmt.Sprintf("paketobuildpacks/run-nodejs-%s-ubi8-base", stack.NodeVersion),
 		}
 		dependencies = append(dependencies, dependency)
 	}

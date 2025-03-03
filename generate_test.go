@@ -196,7 +196,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 				Expect(generateResult).NotTo(Equal(nil))
 
 				runDockerFileProps := structs.RunDockerfileProps{
-					Source: fmt.Sprintf("paketocommunity/run-nodejs-%d-ubi-base", tt.expectedNodeVersion),
+					Source: fmt.Sprintf("paketobuildpacks/run-nodejs-%d-ubi8-base", tt.expectedNodeVersion),
 				}
 				runDockerfileContent, _ := utils.GenerateRunDockerfile(runDockerFileProps)
 
@@ -281,7 +281,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 				Expect(generateResult).NotTo(Equal(nil))
 
 				runDockerFileProps := structs.RunDockerfileProps{
-					Source: fmt.Sprintf("paketocommunity/run-nodejs-%d-ubi-base", tt.expectedNodeVersion),
+					Source: fmt.Sprintf("paketobuildpacks/run-nodejs-%d-ubi8-base", tt.expectedNodeVersion),
 				}
 
 				runDockerfileContent, _ := utils.GenerateRunDockerfile(runDockerFileProps)
@@ -356,7 +356,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 				Expect(generateResult).NotTo(Equal(nil))
 
 				runDockerFileProps := structs.RunDockerfileProps{
-					Source: fmt.Sprintf("paketocommunity/run-nodejs-%d-ubi-base", tt.expectedNodeVersion),
+					Source: fmt.Sprintf("paketobuildpacks/run-nodejs-%d-ubi8-base", tt.expectedNodeVersion),
 				}
 				runDockerfileContent, _ := utils.GenerateRunDockerfile(runDockerFileProps)
 
@@ -506,7 +506,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 						},
 					},
 					RunDockerfileProps: structs.RunDockerfileProps{
-						Source: "paketocommunity/run-nodejs-16-ubi-base",
+						Source: "paketobuildpacks/run-nodejs-16-ubi8-base",
 					},
 				},
 				{
@@ -525,7 +525,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 						},
 					},
 					RunDockerfileProps: structs.RunDockerfileProps{
-						Source: "paketocommunity/run-nodejs-16-ubi-base",
+						Source: "paketobuildpacks/run-nodejs-16-ubi8-base",
 					},
 				},
 				{
@@ -536,7 +536,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 						},
 					},
 					RunDockerfileProps: structs.RunDockerfileProps{
-						Source: "paketocommunity/run-nodejs-16-ubi-base",
+						Source: "paketobuildpacks/run-nodejs-16-ubi8-base",
 					},
 				},
 			}
@@ -687,7 +687,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 				Expect(generateResult).NotTo(Equal(nil))
 
 				RunDockerfileProps := structs.RunDockerfileProps{
-					Source: fmt.Sprintf("paketocommunity/run-nodejs-%d-ubi-base", tt.selectedNodeVersion),
+					Source: fmt.Sprintf("paketobuildpacks/run-nodejs-%d-ubi8-base", tt.selectedNodeVersion),
 				}
 
 				runDockerfileContent, _ := utils.GenerateRunDockerfile(RunDockerfileProps)

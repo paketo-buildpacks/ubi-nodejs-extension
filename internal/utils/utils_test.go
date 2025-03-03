@@ -48,19 +48,19 @@ func testGenerateConfigTomlContentFromImagesJson(t *testing.T, context spec.G, i
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketocommunity/run-nodejs-16-ubi-base"
+    source = "paketobuildpacks/run-nodejs-16-ubi8-base"
     stacks = ["io.buildpacks.stacks.ubix"]
     version = "16.1000"
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketocommunity/run-nodejs-18-ubi-base"
+    source = "paketobuildpacks/run-nodejs-18-ubi8-base"
     stacks = ["io.buildpacks.stacks.ubix"]
     version = "18.1000"
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketocommunity/run-nodejs-20-ubi-base"
+    source = "paketobuildpacks/run-nodejs-20-ubi8-base"
     stacks = ["io.buildpacks.stacks.ubix"]
     version = "20.1000"`))
 		})
@@ -184,13 +184,13 @@ func testCreateConfigTomlFileContent(t *testing.T, context spec.G, it spec.S) {
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketocommunity/run-nodejs-22-ubi-base"
+    source = "paketobuildpacks/run-nodejs-22-ubi8-base"
     stacks = ["io.buildpacks.stacks.ubix"]
     version = "22.1000"
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketocommunity/run-nodejs-20-ubi-base"
+    source = "paketobuildpacks/run-nodejs-20-ubi8-base"
     stacks = ["io.buildpacks.stacks.ubix"]
     version = "20.1000"`))
 		})
@@ -447,13 +447,13 @@ func testGenerateRunDockerfile(t *testing.T, context spec.G, it spec.S) {
 		it("Should fill with properties the template/run.Dockerfile", func() {
 
 			RunDockerfileProps := structs.RunDockerfileProps{
-				Source: "paketocommunity/run-nodejs-18-ubi-base",
+				Source: "paketobuildpacks/run-nodejs-18-ubi8-base",
 			}
 
 			output, err := utils.GenerateRunDockerfile(RunDockerfileProps)
 
 			Expect(err).NotTo(HaveOccurred())
-			Expect(output).To(Equal(`FROM paketocommunity/run-nodejs-18-ubi-base`))
+			Expect(output).To(Equal(`FROM paketobuildpacks/run-nodejs-18-ubi8-base`))
 
 		})
 	})
