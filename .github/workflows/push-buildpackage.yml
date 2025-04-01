@@ -63,7 +63,7 @@ jobs:
       id: parse_configs
       run: |
         push_to_dockerhub=true
-        push_to_gcr=true
+        push_to_gcr=false
 
         if [[ -f $REGISTRIES_FILENAME ]]; then
           if jq 'has("dockerhub")' $REGISTRIES_FILENAME > /dev/null; then
