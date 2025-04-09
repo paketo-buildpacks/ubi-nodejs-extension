@@ -451,7 +451,7 @@ func testSimple(t *testing.T, context spec.G, it spec.S) {
 				"      <unknown>       -> \"\"",
 			))
 			Expect(logs).To(ContainLines(
-				MatchRegexp(`failed to satisfy \"node\" dependency version constraint \"~14\": no compatible versions on \"io.buildpacks.stacks.ubi8\" stack. Supported versions are: \[(?:\d+\.\d+(?:, )?)*\d+\.\d+\]`),
+				MatchRegexp(`failed to satisfy \"node\" dependency version constraint \"~14\": no compatible versions on \"io.buildpacks.stacks.ubi8\" stack with architecture \"amd64\". Supported versions are: \[(?:\d+\.\d+(?:, )?)*\d+\.\d+\]`),
 			))
 		})
 	})
