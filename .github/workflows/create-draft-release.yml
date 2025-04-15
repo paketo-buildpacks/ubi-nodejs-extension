@@ -141,7 +141,7 @@ jobs:
         image_name="localhost:5000/npm-install:latest"
 
         ./scripts/publish.sh \
-          --buildpack-archive ./build/buildpack.tgz \
+          --buildpack-type ${{ steps.get_buildpack_type.outputs.buildpack_type }} \
           --image-ref $image_name
 
         echo "digest=$(sudo skopeo inspect "docker://${image_name}" --tls-verify=false | jq -r .Digest)" >> "$GITHUB_OUTPUT"
