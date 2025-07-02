@@ -9,7 +9,7 @@ require (
 	github.com/paketo-buildpacks/libnodejs v0.4.0
 	github.com/paketo-buildpacks/occam v0.28.0
 	github.com/paketo-buildpacks/packit v1.3.1
-	github.com/paketo-buildpacks/packit/v2 v2.20.0
+	github.com/paketo-buildpacks/packit/v2 v2.21.0
 	github.com/sclevine/spec v1.4.0
 )
 
@@ -58,7 +58,7 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	github.com/power-devops/perfstat v0.0.0-20240221224432-82ca36839d55 // indirect
-	github.com/shirou/gopsutil/v4 v4.25.5 // indirect
+	github.com/shirou/gopsutil/v4 v4.25.6 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/testcontainers/testcontainers-go v0.37.0 // indirect
