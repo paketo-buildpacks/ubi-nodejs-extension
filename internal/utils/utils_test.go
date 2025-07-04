@@ -606,6 +606,12 @@ func testGetBuildPackages(t *testing.T, context spec.G, it spec.S) {
 					expectedError: "unsupported Node.js version 14 for image io.buildpacks.stacks.ubi8",
 					description:   "UBI8 with unsupported Node.js 14",
 				},
+				{
+					stackId:       "io.buildpacks.stacks.ubi9",
+					nodeVersion:   16,
+					expectedError: "unsupported Node.js version 16 for image io.buildpacks.stacks.ubi9",
+					description:   "UBI9 with unsupported Node.js 16",
+				},
 			}
 
 			for _, tt := range testCases {
