@@ -8,7 +8,6 @@ import (
 	"testing"
 
 	. "github.com/onsi/gomega"
-	ubinodejsextension "github.com/paketo-buildpacks/ubi-nodejs-extension"
 	"github.com/paketo-buildpacks/ubi-nodejs-extension/constants"
 	testhelpers "github.com/paketo-buildpacks/ubi-nodejs-extension/internal/testhelpers"
 	"github.com/paketo-buildpacks/ubi-nodejs-extension/internal/utils"
@@ -78,6 +77,7 @@ func testGenerateConfigTomlContentFromImagesJson(t *testing.T, context spec.G, i
 	})
 
 }
+
 func testGetDefaultNodeVersion(t *testing.T, context spec.G, it spec.S) {
 
 	var (
@@ -406,12 +406,15 @@ func testGenerateBuildDockerfile(t *testing.T, context spec.G, it spec.S) {
 
 		it("Should fill with properties the template/build.Dockerfile", func() {
 
+			getInstalledPackages, err := utils.GetBuildPackages("io.buildpacks.stacks.ubi8", 16)
+			Expect(err).NotTo(HaveOccurred())
+
 			output, err := utils.GenerateBuildDockerfile(structs.BuildDockerfileProps{
 				NODEJS_VERSION: 16,
 				CNB_USER_ID:    1000,
 				CNB_GROUP_ID:   1000,
 				CNB_STACK_ID:   "io.buildpacks.stacks.ubi8",
-				PACKAGES:       ubinodejsextension.PACKAGES,
+				PACKAGES:       getInstalledPackages,
 			})
 
 			Expect(err).NotTo(HaveOccurred())
@@ -429,7 +432,7 @@ RUN microdnf --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install -y %s 
 RUN echo uid:gid "1000:1000"
 USER 1000:1000
 
-RUN echo "CNB_STACK_ID: io.buildpacks.stacks.ubi8"`, ubinodejsextension.PACKAGES)))
+RUN echo "CNB_STACK_ID: io.buildpacks.stacks.ubi8"`, getInstalledPackages)))
 
 		})
 
@@ -538,4 +541,115 @@ nobody:x:65534:65534:Kernel Overflow User:/:/sbin/nologin
 			))
 		})
 	})
+}
+
+func testGetBuildPackages(t *testing.T, context spec.G, it spec.S) {
+
+	var (
+		Expect = NewWithT(t).Expect
+	)
+
+	context("Success cases", func() {
+		it("should return the correct build packages for all supported combinations", func() {
+			testCases := []struct {
+				stackId          string
+				nodeVersion      int
+				expectedPackages string
+				description      string
+			}{
+				// UBI8
+				{
+					stackId:          "io.buildpacks.stacks.ubi8",
+					nodeVersion:      16,
+					expectedPackages: "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3",
+					description:      "UBI8 with Node.js 16",
+				},
+				{
+					stackId:          "io.buildpacks.stacks.ubi8",
+					nodeVersion:      18,
+					expectedPackages: "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3",
+					description:      "UBI8 with Node.js 18",
+				},
+				{
+					stackId:          "io.buildpacks.stacks.ubi8",
+					nodeVersion:      20,
+					expectedPackages: "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3",
+					description:      "UBI8 with Node.js 20",
+				},
+				{
+					stackId:          "io.buildpacks.stacks.ubi8",
+					nodeVersion:      22,
+					expectedPackages: "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3.12",
+					description:      "UBI8 with Node.js 22 (uses GCC toolset 13)",
+				},
+			}
+
+			for _, tt := range testCases {
+				packages, err := utils.GetBuildPackages(tt.stackId, tt.nodeVersion)
+				Expect(err).NotTo(HaveOccurred(), "Failed for: %s", tt.description)
+				Expect(packages).To(Equal(tt.expectedPackages), "Package mismatch for: %s", tt.description)
+			}
+		})
+	})
+
+	context("Error cases", func() {
+		it("should return errors for unsupported Node.js versions", func() {
+			testCases := []struct {
+				stackId       string
+				nodeVersion   int
+				expectedError string
+				description   string
+			}{
+				{
+					stackId:       "io.buildpacks.stacks.ubi8",
+					nodeVersion:   14,
+					expectedError: "unsupported Node.js version 14 for image io.buildpacks.stacks.ubi8",
+					description:   "UBI8 with unsupported Node.js 14",
+				},
+			}
+
+			for _, tt := range testCases {
+				packages, err := utils.GetBuildPackages(tt.stackId, tt.nodeVersion)
+				Expect(err).To(HaveOccurred(), "Expected error for: %s", tt.description)
+				Expect(err.Error()).To(Equal(tt.expectedError), "Error message mismatch for: %s", tt.description)
+				Expect(packages).To(BeEmpty(), "Expected empty packages for: %s", tt.description)
+			}
+		})
+
+		it("should return errors for unsupported stack IDs", func() {
+			testCases := []struct {
+				stackId       string
+				nodeVersion   int
+				expectedError string
+				description   string
+			}{
+				{
+					stackId:       "io.buildpacks.stacks.ubi7",
+					nodeVersion:   20,
+					expectedError: "unsupported image ID: io.buildpacks.stacks.ubi7",
+					description:   "Unsupported UBI7 stack",
+				},
+				{
+					stackId:       "invalid.stack.id",
+					nodeVersion:   18,
+					expectedError: "unsupported image ID: invalid.stack.id",
+					description:   "Invalid stack ID",
+				},
+				{
+					stackId:       "",
+					nodeVersion:   20,
+					expectedError: "unsupported image ID: ",
+					description:   "Empty stack ID",
+				},
+			}
+
+			for _, tt := range testCases {
+				packages, err := utils.GetBuildPackages(tt.stackId, tt.nodeVersion)
+				Expect(err).To(HaveOccurred(), "Expected error for: %s", tt.description)
+				Expect(err.Error()).To(Equal(tt.expectedError), "Error message mismatch for: %s", tt.description)
+				Expect(packages).To(BeEmpty(), "Expected empty packages for: %s", tt.description)
+			}
+		})
+	})
+
 }

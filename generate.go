@@ -15,7 +15,6 @@ import (
 	"github.com/paketo-buildpacks/packit/v2/scribe"
 )
 
-const PACKAGES = "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3"
 const CONFIG_TOML_PATH = "/tmp/config.toml"
 
 //go:generate faux --interface DependencyManager --output fakes/dependency_manager.go
@@ -75,13 +74,18 @@ func Generate(dependencyManager DependencyManager, logger scribe.Emitter, during
 
 		logger.Process("Selected Node Engine Major version %d", selectedNodeMajorVersion)
 
+		requiredPackagesForBuild, err := utils.GetBuildPackages(context.Stack, int(selectedNodeMajorVersion))
+		if err != nil {
+			return packit.GenerateResult{}, err
+		}
+
 		// Generating build.Dockerfile
 		buildDockerfileContent, err := utils.GenerateBuildDockerfile(structs.BuildDockerfileProps{
 			NODEJS_VERSION: selectedNodeMajorVersion,
 			CNB_USER_ID:    duringBuildPermissions.CNB_USER_ID,
 			CNB_GROUP_ID:   duringBuildPermissions.CNB_GROUP_ID,
 			CNB_STACK_ID:   context.Stack,
-			PACKAGES:       PACKAGES,
+			PACKAGES:       requiredPackagesForBuild,
 		})
 
 		if err != nil {
