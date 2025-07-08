@@ -17,5 +17,6 @@ func TestUnitUtils(t *testing.T) {
 	suite("GetDuringBuildPermissions", testGetDuringBuildPermissions)
 	suite("testGenerateBuildDockerfile", testGenerateBuildDockerfile)
 	suite("testGenerateRunDockerfile", testGenerateRunDockerfile)
+	suite("testGetBuildPackages", testGetBuildPackages)
 	suite.Run(t)
 }

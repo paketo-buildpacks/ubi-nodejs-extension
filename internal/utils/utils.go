@@ -228,3 +228,20 @@ func fillPropsToTemplate(properties interface{}, templateString string) (result 
 
 	return buf.String(), nil
 }
+
+func GetBuildPackages(imageId string, nodeVersion int) (string, error) {
+
+	switch imageId {
+	case "io.buildpacks.stacks.ubi8":
+		switch nodeVersion {
+		case 16, 18, 20:
+			return "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3", nil
+		case 22:
+			return "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3.12", nil
+		default:
+			return "", fmt.Errorf("unsupported Node.js version %d for image %s", nodeVersion, imageId)
+		}
+	}
+
+	return "", fmt.Errorf("unsupported image ID: %s", imageId)
+}

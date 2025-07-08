@@ -200,11 +200,13 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 				}
 				runDockerfileContent, _ := utils.GenerateRunDockerfile(runDockerFileProps)
 
+				requiredPackagesForBuild, err := utils.GetBuildPackages("io.buildpacks.stacks.ubi8", tt.expectedNodeVersion)
+				Expect(err).NotTo(HaveOccurred())
 				buildDockerfileProps := structs.BuildDockerfileProps{
 					CNB_USER_ID:    1002,
 					CNB_GROUP_ID:   1000,
 					CNB_STACK_ID:   "io.buildpacks.stacks.ubi8",
-					PACKAGES:       ubinodejsextension.PACKAGES,
+					PACKAGES:       requiredPackagesForBuild,
 					NODEJS_VERSION: uint64(tt.expectedNodeVersion),
 				}
 
@@ -284,12 +286,14 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 					Source: fmt.Sprintf("paketobuildpacks/run-nodejs-%d-ubi8-base", tt.expectedNodeVersion),
 				}
 
+				requiredPackagesForBuild, err := utils.GetBuildPackages("io.buildpacks.stacks.ubi8", tt.expectedNodeVersion)
+				Expect(err).NotTo(HaveOccurred())
 				runDockerfileContent, _ := utils.GenerateRunDockerfile(runDockerFileProps)
 				buildDockerfileProps := structs.BuildDockerfileProps{
 					CNB_USER_ID:    1002,
 					CNB_GROUP_ID:   1000,
 					CNB_STACK_ID:   "io.buildpacks.stacks.ubi8",
-					PACKAGES:       ubinodejsextension.PACKAGES,
+					PACKAGES:       requiredPackagesForBuild,
 					NODEJS_VERSION: uint64(tt.expectedNodeVersion),
 				}
 
@@ -360,11 +364,14 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 				}
 				runDockerfileContent, _ := utils.GenerateRunDockerfile(runDockerFileProps)
 
+				requiredPackagesForBuild, err := utils.GetBuildPackages("io.buildpacks.stacks.ubi8", tt.expectedNodeVersion)
+				Expect(err).NotTo(HaveOccurred())
+
 				buildDockerfileProps := structs.BuildDockerfileProps{
 					CNB_USER_ID:    1002,
 					CNB_GROUP_ID:   1000,
 					CNB_STACK_ID:   "io.buildpacks.stacks.ubi8",
-					PACKAGES:       ubinodejsextension.PACKAGES,
+					PACKAGES:       requiredPackagesForBuild,
 					NODEJS_VERSION: uint64(tt.expectedNodeVersion),
 				}
 
