@@ -84,9 +84,6 @@ func TestIntegration(t *testing.T) {
 		Execute(settings.Config.NodeEngine)
 	Expect(err).NotTo(HaveOccurred())
 
-	settings.Buildpacks.NodeEngine.ID = "paketo-buildpacks/node-engine"
-	settings.Buildpacks.NodeEngine.Name = "Paketo Buildpack for Node Engine"
-
 	settings.Buildpacks.Processes.Online = filepath.Join("testdata", "processes_buildpack")
 
 	SetDefaultEventuallyTimeout(5 * time.Second)
