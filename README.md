@@ -46,7 +46,7 @@ pack build test-app \
    --path ./app-dir \
    --extension docker.io/paketobuildpacks/ubi-nodejs-extension \
    --buildpack paketo-buildpacks/nodejs \
-   --builder paketocommunity/builder-ubi-buildpackless-base
+   --builder paketobuildpacks/builder-ubi8-buildpackless-base
 ```
 
 ### Install a Specific a Node Engine Version
