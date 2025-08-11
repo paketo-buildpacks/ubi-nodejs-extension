@@ -76,16 +76,16 @@ func testProjectPath(t *testing.T, context spec.G, it spec.S) {
 				fmt.Sprintf("%s 1.2.3", settings.Extension.Name),
 				"  Resolving Node Engine version",
 				"    Candidate version sources (in priority order):",
-				"      .node-version -> \"16.*\"",
+				"      .node-version -> \"20.*\"",
 				"      <unknown>     -> \"\""))
 
 			Expect(logs).To(ContainLines(
-				"  Selected Node Engine Major version 16"))
+				"  Selected Node Engine Major version 20"))
 			Expect(logs).To(ContainLines("===> RESTORING"))
 			Expect(logs).To(ContainLines("===> EXTENDING (BUILD)"))
 
 			Expect(logs).To(ContainLines("[extender (build)] Enabling module streams:",
-				"[extender (build)]     nodejs:16"))
+				"[extender (build)]     nodejs:20"))
 
 			container, err = docker.Container.Run.
 				WithCommand("node hello_world_server/server.js").

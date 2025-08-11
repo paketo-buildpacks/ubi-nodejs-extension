@@ -50,7 +50,6 @@ var settings struct {
 func TestIntegration(t *testing.T) {
 	Expect := NewWithT(t).Expect
 
-	//reading the extension.toml file
 	file, err := os.Open("../extension.toml")
 	Expect(err).NotTo(HaveOccurred())
 
@@ -58,7 +57,6 @@ func TestIntegration(t *testing.T) {
 	Expect(err).NotTo(HaveOccurred())
 	Expect(file.Close()).To(Succeed())
 
-	//reading the integration.json file
 	file, err = os.Open("../integration.json")
 	Expect(err).NotTo(HaveOccurred())
 

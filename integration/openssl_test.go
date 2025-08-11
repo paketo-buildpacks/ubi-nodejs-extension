@@ -22,6 +22,14 @@ func testOpenSSL(t *testing.T, context spec.G, it spec.S) {
 		docker occam.Docker
 	)
 
+	var testCases = []struct {
+		nodeVersion string
+		expected    string
+	}{
+		{"20.*.*", "v20."},
+		{"22.*.*", "v22."},
+	}
+
 	it.Before(func() {
 		pack = occam.NewPack()
 		docker = occam.NewDocker()
@@ -51,88 +59,51 @@ func testOpenSSL(t *testing.T, context spec.G, it spec.S) {
 			Expect(os.RemoveAll(source)).To(Succeed())
 		})
 
-		context("when running Node 16", func() {
-			it("uses the OpenSSL CA store to verify certificates", func() {
-				var (
-					logs fmt.Stringer
-					err  error
-				)
+		for _, tc := range testCases {
+			nodeVersion := tc.nodeVersion
+			context(fmt.Sprintf("when running Node %s", nodeVersion), func() {
 
-				image, logs, err = pack.WithNoColor().Build.
-					WithExtensions(
-						settings.Buildpacks.NodeExtension.Online,
-					).
-					WithBuildpacks(
-						settings.Buildpacks.NodeEngine.Online,
-						settings.Buildpacks.BuildPlan.Online,
-					).
-					WithEnv(map[string]string{
-						"BP_NODE_VERSION": "16.*.*",
-					}).
-					WithPullPolicy("always").
-					Execute(name, source)
-				Expect(err).ToNot(HaveOccurred(), logs.String)
+				it("uses the OpenSSL CA store to verify certificates", func() {
+					var (
+						logs fmt.Stringer
+						err  error
+					)
 
-				container, err = docker.Container.Run.
-					WithPublish("8080").
-					WithCommand("node server.js").
-					Execute(image.ID)
-				Expect(err).NotTo(HaveOccurred())
+					image, logs, err = pack.WithNoColor().Build.
+						WithExtensions(
+							settings.Buildpacks.NodeExtension.Online,
+						).
+						WithBuildpacks(
+							settings.Buildpacks.NodeEngine.Online,
+							settings.Buildpacks.BuildPlan.Online,
+						).
+						WithEnv(map[string]string{
+							"BP_NODE_VERSION": nodeVersion,
+						}).
+						WithPullPolicy("always").
+						Execute(name, source)
+					Expect(err).NotTo(HaveOccurred(), logs.String)
 
-				Eventually(container).Should(Serve("hello world"))
-				Expect(container).To(Serve(ContainSubstring("v16.")).WithEndpoint("/version"))
-				Expect(container).To(Serve(ContainSubstring("301 Moved")).WithEndpoint("/test-openssl-ca"))
+					container, err = docker.Container.Run.
+						WithPublish("8080").
+						WithCommand("node server.js").
+						Execute(image.ID)
+					Expect(err).NotTo(HaveOccurred())
 
-				Expect(logs).To(ContainLines(
-					`[extender (build)]   Configuring launch environment`,
-					`[extender (build)]     NODE_ENV     -> "production"`,
-					`[extender (build)]     NODE_HOME    -> ""`,
-					`[extender (build)]     NODE_OPTIONS -> "--use-openssl-ca"`,
-					`[extender (build)]     NODE_VERBOSE -> "false"`,
-				))
+					Eventually(container).Should(Serve("hello world"))
+					Expect(container).To(Serve(ContainSubstring(tc.expected)).WithEndpoint("/version"))
+					Expect(container).To(Serve(ContainSubstring("301 Moved")).WithEndpoint("/test-openssl-ca"))
+
+					Expect(logs).To(ContainLines(
+						`[extender (build)]   Configuring launch environment`,
+						`[extender (build)]     NODE_ENV     -> "production"`,
+						`[extender (build)]     NODE_HOME    -> ""`,
+						`[extender (build)]     NODE_OPTIONS -> "--use-openssl-ca"`,
+						`[extender (build)]     NODE_VERBOSE -> "false"`,
+					))
+				})
 			})
-		})
 
-		context("when running Node 18", func() {
-			it("uses the OpenSSL CA store to verify certificates", func() {
-				var (
-					logs fmt.Stringer
-					err  error
-				)
-
-				image, logs, err = pack.WithNoColor().Build.
-					WithExtensions(
-						settings.Buildpacks.NodeExtension.Online,
-					).
-					WithBuildpacks(
-						settings.Buildpacks.NodeEngine.Online,
-						settings.Buildpacks.BuildPlan.Online,
-					).
-					WithEnv(map[string]string{
-						"BP_NODE_VERSION": "18.*.*",
-					}).
-					WithPullPolicy("always").
-					Execute(name, source)
-				Expect(err).ToNot(HaveOccurred(), logs.String)
-
-				container, err = docker.Container.Run.
-					WithPublish("8080").
-					WithCommand("node server.js").
-					Execute(image.ID)
-				Expect(err).NotTo(HaveOccurred())
-
-				Eventually(container).Should(Serve("hello world"))
-				Expect(container).To(Serve(ContainSubstring("v18.")).WithEndpoint("/version"))
-				Expect(container).To(Serve(ContainSubstring("301 Moved")).WithEndpoint("/test-openssl-ca"))
-
-				Expect(logs).To(ContainLines(
-					`[extender (build)]   Configuring launch environment`,
-					`[extender (build)]     NODE_ENV     -> "production"`,
-					`[extender (build)]     NODE_HOME    -> ""`,
-					`[extender (build)]     NODE_OPTIONS -> "--use-openssl-ca"`,
-					`[extender (build)]     NODE_VERBOSE -> "false"`,
-				))
-			})
-		})
+		}
 	})
 }
