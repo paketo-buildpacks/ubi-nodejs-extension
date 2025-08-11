@@ -26,7 +26,7 @@ The extension integrates with the existing Paketo buildpacks so that building yo
 Build your app where `test-app` will be the name of the image built and `app-dir` is the directory that contains your Node.js application.
 
 ```sh
-pack build test-app-name --path ./app-dir --builder paketocommunity/builder-ubi-base
+pack build test-app-name --path ./app-dir --builder paketobuildpacks/builder-ubi8-base
 ```
 
 Run your application with `docker run -p 8080:8080 test-app` replacing `8080:8080` with the port on which your application listens.
@@ -39,7 +39,12 @@ Feel free to add more [buildpacks](https://github.com/orgs/paketo-buildpacks/rep
 
 ### Build without the full builder
 
-The [build-ubi-base](https://github.com/paketo-community/builder-ubi-base) builder [has a list](https://github.com/paketo-community/builder-ubi-base/blob/main/builder.toml) of buildpacks and an extension participating during build. You can also use the [buildpackless ubi builder](https://github.com/paketo-community/builder-ubi-buildpackless-base) which has no buildpacks or the extension participating during build and include only the ones you want as demonstrated on below example for a Node.js app.
+The [builder-ubi8-base](https://github.com/paketo-buildpacks/builder-ubi8-base) builder [has a list](https://github.com/paketo-buildpacks/builder-ubi8-base/blob/main/builder.toml) of buildpacks and an extension participating during build. You can also use the `buildpackless ubi builders`:
+
+* https://github.com/paketo-buildpacks/builder-ubi8-buildpackless-base
+* https://github.com/paketo-buildpacks/ubi-9-builder
+
+which has no buildpacks or the extension participating during build and include only the ones you want as demonstrated on below example for a Node.js app.
 
 ```sh
 pack build test-app \
@@ -62,7 +67,7 @@ The extension prioritizes the versions specified in each possible configuration 
 ```bash
 pack build test-app-name \
    --path ./app-dir \
-   --builder paketocommunity/builder-ubi-base \
+   --builder paketo-buildpacks/builder-ubi8-base \
    --env BP_NODE_VERSION="~20"
 ```
 
@@ -102,7 +107,7 @@ With `BP_UBI_RUN_IMAGE_OVERRIDE` environment variable, you are able to specify t
 ```bash
   pack build test-app-name \
      --path ./app-dir \
-     --builder paketocommunity/builder-ubi-base \
+     --builder paketo-buildpacks/builder-ubi8-base \
      --env BP_UBI_RUN_IMAGE_OVERRIDE="localhost:5000/my-run-image"
 ```
 
