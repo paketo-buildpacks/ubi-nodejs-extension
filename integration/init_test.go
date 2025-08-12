@@ -50,7 +50,6 @@ var settings struct {
 func TestIntegration(t *testing.T) {
 	Expect := NewWithT(t).Expect
 
-	//reading the extension.toml file
 	file, err := os.Open("../extension.toml")
 	Expect(err).NotTo(HaveOccurred())
 
@@ -58,7 +57,6 @@ func TestIntegration(t *testing.T) {
 	Expect(err).NotTo(HaveOccurred())
 	Expect(file.Close()).To(Succeed())
 
-	//reading the integration.json file
 	file, err = os.Open("../integration.json")
 	Expect(err).NotTo(HaveOccurred())
 
@@ -83,9 +81,6 @@ func TestIntegration(t *testing.T) {
 		WithVersion("1.2.3").
 		Execute(settings.Config.NodeEngine)
 	Expect(err).NotTo(HaveOccurred())
-
-	settings.Buildpacks.NodeEngine.ID = "paketo-buildpacks/node-engine"
-	settings.Buildpacks.NodeEngine.Name = "Paketo Buildpack for Node Engine"
 
 	settings.Buildpacks.Processes.Online = filepath.Join("testdata", "processes_buildpack")
 

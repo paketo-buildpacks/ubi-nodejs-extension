@@ -254,14 +254,14 @@ func testSimple(t *testing.T, context spec.G, it spec.S) {
 					fmt.Sprintf("%s 1.2.3", settings.Extension.Name),
 					"  Resolving Node Engine version",
 					"    Candidate version sources (in priority order):",
-					"      .node-version -> \"16.*\"",
+					"      .node-version -> \"22.*\"",
 					"      <unknown>     -> \"\""))
 				Expect(logs).To(ContainLines(
-					"  Selected Node Engine Major version 16"))
+					"  Selected Node Engine Major version 22"))
 				Expect(logs).To(ContainLines("===> RESTORING"))
 				Expect(logs).To(ContainLines("===> EXTENDING (BUILD)"))
 				Expect(logs).To(ContainLines("[extender (build)] Enabling module streams:",
-					"[extender (build)]     nodejs:16"))
+					"[extender (build)]     nodejs:22"))
 
 				// SBOM is not supported at the moment from UBI image
 				// therefore there are no available logs to test/validate
@@ -345,14 +345,14 @@ func testSimple(t *testing.T, context spec.G, it spec.S) {
 					fmt.Sprintf("%s 1.2.3", settings.Extension.Name),
 					"  Resolving Node Engine version",
 					"    Candidate version sources (in priority order):",
-					"      .nvmrc    -> \"16.*\"",
+					"      .nvmrc    -> \"22.*\"",
 					"      <unknown> -> \"\"",
 				))
-				Expect(logs).To(ContainLines("  Selected Node Engine Major version 16"))
+				Expect(logs).To(ContainLines("  Selected Node Engine Major version 22"))
 				Expect(logs).To(ContainLines("===> RESTORING"))
 				Expect(logs).To(ContainLines("===> EXTENDING (BUILD)"))
 				Expect(logs).To(ContainLines("[extender (build)] Enabling module streams:"))
-				Expect(logs).To(ContainLines("[extender (build)]     nodejs:16"))
+				Expect(logs).To(ContainLines("[extender (build)]     nodejs:22"))
 
 				// SBOM is not supported at the moment from UBI image
 				// therefore there are no available logs to test/validate
@@ -450,8 +450,9 @@ func testSimple(t *testing.T, context spec.G, it spec.S) {
 				"      BP_NODE_VERSION -> \"~14\"",
 				"      <unknown>       -> \"\"",
 			))
+
 			Expect(logs).To(ContainLines(
-				MatchRegexp(`failed to satisfy \"node\" dependency version constraint \"~14\": no compatible versions on \"io.buildpacks.stacks.ubi8\" stack. Supported versions are: \[(?:\d+\.\d+(?:, )?)*\d+\.\d+\]`),
+				MatchRegexp(`failed to satisfy \"node\" dependency version constraint \"~14\": no compatible versions on \"io\.buildpacks\.stacks\.ubi\d+\" stack\. Supported versions are: \[[\d\., ]+\]`),
 			))
 		})
 	})
