@@ -47,19 +47,19 @@ func testGenerateConfigTomlContentFromImagesJson(t *testing.T, context spec.G, i
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketobuildpacks/run-nodejs-16-ubi8-base"
+    source = "paketobuildpacks/run-nodejs-16-ubix-base"
     stacks = ["io.buildpacks.stacks.ubix"]
     version = "16.1000"
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketobuildpacks/run-nodejs-18-ubi8-base"
+    source = "paketobuildpacks/run-nodejs-18-ubix-base"
     stacks = ["io.buildpacks.stacks.ubix"]
     version = "18.1000"
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketobuildpacks/run-nodejs-20-ubi8-base"
+    source = "paketobuildpacks/run-nodejs-20-ubix-base"
     stacks = ["io.buildpacks.stacks.ubix"]
     version = "20.1000"`))
 		})
@@ -175,7 +175,7 @@ func testCreateConfigTomlFileContent(t *testing.T, context spec.G, it spec.S) {
 					IsDefaultRunImage: false,
 					NodeVersion:       "20",
 				},
-			}, "io.buildpacks.stacks.ubix")
+			}, "io.buildpacks.stacks.ubix", "ubi8")
 
 			Expect(err).ToNot(HaveOccurred())
 			Expect(configTomlFileContent.String()).To(ContainSubstring(`[metadata]
@@ -658,4 +658,71 @@ func testGetBuildPackages(t *testing.T, context spec.G, it spec.S) {
 		})
 	})
 
+}
+
+func testGetOsCodenameFromStackId(t *testing.T, context spec.G, it spec.S) {
+
+	var (
+		Expect = NewWithT(t).Expect
+	)
+
+	context("When passing a valid stack ID", func() {
+
+		it("should return the correct OS codename", func() {
+
+			testCases := []struct {
+				stackId          string
+				expectedCodename string
+				description      string
+			}{
+				{
+					stackId:          "io.buildpacks.stacks.ubi8",
+					expectedCodename: "ubi8",
+				},
+				{
+					stackId:          "io.buildpacks.stacks.ubi9",
+					expectedCodename: "ubi9",
+				},
+			}
+
+			for _, tc := range testCases {
+				codename, err := utils.GetOsCodenameFromStackId(tc.stackId)
+				Expect(err).NotTo(HaveOccurred())
+				Expect(codename).To(Equal(tc.expectedCodename))
+			}
+		})
+	})
+
+	context("When os codename can not be extracted from the stack id", func() {
+
+		it("should return an error", func() {
+			testCases := []struct {
+				stackId       string
+				expectedError string
+			}{
+				{
+					stackId:       "io.buildpacks.stacks.",
+					expectedError: "failed to extract os codename from stack id 'io.buildpacks.stacks.': os codename length cannot be zero",
+				},
+				{
+					stackId:       "invalid.stackid.ubi8",
+					expectedError: "failed to extract os codename from stack id 'invalid.stackid.ubi8'. stack id is missing the required prefix 'io.buildpacks.stacks.'",
+				},
+				{
+					stackId:       "",
+					expectedError: "failed to extract os codename from stack id ''. stack id is missing the required prefix 'io.buildpacks.stacks.'",
+				},
+				{
+					stackId:       "lskdjflksdfj s sdlkf sfd;alf ",
+					expectedError: "failed to extract os codename from stack id 'lskdjflksdfj s sdlkf sfd;alf '. stack id is missing the required prefix 'io.buildpacks.stacks.'",
+				},
+			}
+
+			for _, tt := range testCases {
+				_, err := utils.GetOsCodenameFromStackId(tt.stackId)
+				Expect(err).To(HaveOccurred())
+				Expect(err.Error()).To(Equal(tt.expectedError))
+			}
+		})
+	})
 }
