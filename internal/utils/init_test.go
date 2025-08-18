@@ -18,5 +18,6 @@ func TestUnitUtils(t *testing.T) {
 	suite("testGenerateBuildDockerfile", testGenerateBuildDockerfile)
 	suite("testGenerateRunDockerfile", testGenerateRunDockerfile)
 	suite("testGetBuildPackages", testGetBuildPackages)
+	suite("testGetOsCodenameFromStackId", testGetOsCodenameFromStackId)
 	suite.Run(t)
 }

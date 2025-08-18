@@ -51,7 +51,12 @@ func GenerateConfigTomlContentFromImagesJson(imagesJsonPath string, stackId stri
 		return []byte{}, err
 	}
 
-	configTomlContent, err := CreateConfigTomlFileContent(defaultNodeVersion, nodejsStacks, stackId)
+	osCodename, err := GetOsCodenameFromStackId(stackId)
+	if err != nil {
+		return []byte{}, err
+	}
+
+	configTomlContent, err := CreateConfigTomlFileContent(defaultNodeVersion, nodejsStacks, stackId, osCodename)
 	if err != nil {
 		return []byte{}, err
 	}
@@ -76,7 +81,7 @@ func GetDefaultNodeVersion(stacks []StackImages) (string, error) {
 	}
 }
 
-func CreateConfigTomlFileContent(defaultNodeVersion string, nodejsStacks []StackImages, stackId string) (bytes.Buffer, error) {
+func CreateConfigTomlFileContent(defaultNodeVersion string, nodejsStacks []StackImages, stackId string, osCodename string) (bytes.Buffer, error) {
 
 	var dependencies []map[string]interface{}
 
@@ -85,7 +90,7 @@ func CreateConfigTomlFileContent(defaultNodeVersion string, nodejsStacks []Stack
 			"id":      "node",
 			"stacks":  []string{stackId},
 			"version": fmt.Sprintf("%s.1000", stack.NodeVersion),
-			"source":  fmt.Sprintf("paketobuildpacks/run-nodejs-%s-ubi8-base", stack.NodeVersion),
+			"source":  fmt.Sprintf("paketobuildpacks/run-nodejs-%s-%s-base", stack.NodeVersion, osCodename),
 		}
 		dependencies = append(dependencies, dependency)
 	}
@@ -244,11 +249,28 @@ func GetBuildPackages(imageId string, nodeVersion int) (string, error) {
 	case "io.buildpacks.stacks.ubi9":
 		switch nodeVersion {
 		case 18, 20, 22:
-			return "make gcc gcc-c++ git openssl-devel nodejs npm nodejs-nodemon nss_wrapper-libs", nil
+			return "make gcc gcc-c++ git openssl-devel nodejs npm nodejs-nodemon nss_wrapper-libs python3", nil
 		default:
 			return "", fmt.Errorf("unsupported Node.js version %d for image %s", nodeVersion, imageId)
 		}
 	}
 
 	return "", fmt.Errorf("unsupported image ID: %s", imageId)
+}
+
+// Application ran, i have to figure out to how to catch this scenario next time on ubinotjsextn
+func GetOsCodenameFromStackId(stackId string) (string, error) {
+
+	stackIdPrefix := "io.buildpacks.stacks."
+	osCodename := strings.TrimPrefix(stackId, stackIdPrefix)
+
+	if !strings.HasPrefix(stackId, stackIdPrefix) {
+		return "", fmt.Errorf("failed to extract os codename from stack id '%s'. stack id is missing the required prefix '%s'", stackId, stackIdPrefix)
+	}
+
+	if len(osCodename) == 0 {
+		return "", fmt.Errorf("failed to extract os codename from stack id '%s': os codename length cannot be zero", stackId)
+	}
+
+	return osCodename, nil
 }
