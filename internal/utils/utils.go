@@ -249,7 +249,7 @@ func GetBuildPackages(imageId string, nodeVersion int) (string, error) {
 	case "io.buildpacks.stacks.ubi9":
 		switch nodeVersion {
 		case 18, 20, 22:
-			return "make gcc gcc-c++ git openssl-devel nodejs npm nodejs-nodemon nss_wrapper-libs", nil
+			return "make gcc gcc-c++ git openssl-devel nodejs npm nodejs-nodemon nss_wrapper-libs python3", nil
 		default:
 			return "", fmt.Errorf("unsupported Node.js version %d for image %s", nodeVersion, imageId)
 		}
