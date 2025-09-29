@@ -7,7 +7,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.4.0
 	github.com/onsi/gomega v1.38.2
 	github.com/paketo-buildpacks/libnodejs v0.4.1
-	github.com/paketo-buildpacks/occam v0.30.0
+	github.com/paketo-buildpacks/occam v0.30.1
 	github.com/paketo-buildpacks/packit v1.3.1
 	github.com/paketo-buildpacks/packit/v2 v2.25.0
 	github.com/sclevine/spec v1.4.0
