@@ -220,7 +220,7 @@ func GenerateRunDockerfile(runProps structs.RunDockerfileProps) (result string, 
 	return result, nil
 }
 
-func fillPropsToTemplate(properties interface{}, templateString string) (result string, Error error) {
+func fillPropsToTemplate(properties any, templateString string) (result string, Error error) {
 
 	templ, err := template.New("template").Parse(templateString)
 	if err != nil {
@@ -245,12 +245,14 @@ func GetBuildPackages(imageId string, nodeVersion int) (string, error) {
 			return "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3", nil
 		case 22:
 			return "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3.12", nil
+		case 24:
+			return "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3.12", nil
 		default:
 			return "", fmt.Errorf("unsupported Node.js version %d for image %s", nodeVersion, imageId)
 		}
 	case "io.buildpacks.stacks.ubi9":
 		switch nodeVersion {
-		case 18, 20, 22:
+		case 18, 20, 22, 24:
 			return "make gcc gcc-c++ git openssl-devel nodejs npm nodejs-nodemon nss_wrapper-libs python3", nil
 		default:
 			return "", fmt.Errorf("unsupported Node.js version %d for image %s", nodeVersion, imageId)
@@ -260,7 +262,6 @@ func GetBuildPackages(imageId string, nodeVersion int) (string, error) {
 	return "", fmt.Errorf("unsupported image ID: %s", imageId)
 }
 
-// Application ran, i have to figure out to how to catch this scenario next time on ubinotjsextn
 func GetOsCodenameFromStackId(stackId string) (string, error) {
 
 	stackIdPrefix := "io.buildpacks.stacks."
