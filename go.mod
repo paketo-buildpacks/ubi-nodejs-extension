@@ -6,7 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.5.0
 	github.com/Masterminds/semver/v3 v3.4.0
 	github.com/onsi/gomega v1.38.2
-	github.com/paketo-buildpacks/libnodejs v0.4.1
+	github.com/paketo-buildpacks/libnodejs v0.4.2
 	github.com/paketo-buildpacks/occam v0.31.0
 	github.com/paketo-buildpacks/packit v1.3.1
 	github.com/paketo-buildpacks/packit/v2 v2.25.3
