@@ -147,11 +147,13 @@ func ParseImagesJsonFile(imagesJsonPath string) (ImagesJson, error) {
 		return ImagesJson{}, err
 	}
 
-	defer filepath.Close()
-
 	var imagesJsonData ImagesJson
 	err = json.NewDecoder(filepath).Decode(&imagesJsonData)
 	if err != nil {
+		return ImagesJson{}, err
+	}
+
+	if err := filepath.Close(); err != nil {
 		return ImagesJson{}, err
 	}
 
