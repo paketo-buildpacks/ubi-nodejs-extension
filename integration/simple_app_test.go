@@ -254,15 +254,14 @@ func testSimple(t *testing.T, context spec.G, it spec.S) {
 					fmt.Sprintf("%s 1.2.3", settings.Extension.Name),
 					"  Resolving Node Engine version",
 					"    Candidate version sources (in priority order):",
-					"      .node-version -> \"22.*\"",
+					"      .node-version -> \"24.*\"",
 					"      <unknown>     -> \"\""))
 				Expect(logs).To(ContainLines(
-					"  Selected Node Engine Major version 22"))
+					"  Selected Node Engine Major version 24"))
 				Expect(logs).To(ContainLines("===> RESTORING"))
 				Expect(logs).To(ContainLines("===> EXTENDING (BUILD)"))
 				Expect(logs).To(ContainLines("[extender (build)] Enabling module streams:",
-					"[extender (build)]     nodejs:22"))
-
+					"[extender (build)]     nodejs:24"))
 				// SBOM is not supported at the moment from UBI image
 				// therefore there are no available logs to test/validate
 
@@ -345,15 +344,14 @@ func testSimple(t *testing.T, context spec.G, it spec.S) {
 					fmt.Sprintf("%s 1.2.3", settings.Extension.Name),
 					"  Resolving Node Engine version",
 					"    Candidate version sources (in priority order):",
-					"      .nvmrc    -> \"22.*\"",
+					"      .nvmrc    -> \"24.*\"",
 					"      <unknown> -> \"\"",
 				))
-				Expect(logs).To(ContainLines("  Selected Node Engine Major version 22"))
+				Expect(logs).To(ContainLines("  Selected Node Engine Major version 24"))
 				Expect(logs).To(ContainLines("===> RESTORING"))
 				Expect(logs).To(ContainLines("===> EXTENDING (BUILD)"))
 				Expect(logs).To(ContainLines("[extender (build)] Enabling module streams:"))
-				Expect(logs).To(ContainLines("[extender (build)]     nodejs:22"))
-
+				Expect(logs).To(ContainLines("[extender (build)]     nodejs:24"))
 				// SBOM is not supported at the moment from UBI image
 				// therefore there are no available logs to test/validate
 
