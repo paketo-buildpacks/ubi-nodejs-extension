@@ -26,8 +26,7 @@ func testOpenSSL(t *testing.T, context spec.G, it spec.S) {
 		nodeVersion string
 		expected    string
 	}{
-		{"20.*.*", "v20."},
-		{"22.*.*", "v22."},
+		{"24.*.*", "v24."},
 	}
 
 	it.Before(func() {
@@ -35,7 +34,7 @@ func testOpenSSL(t *testing.T, context spec.G, it spec.S) {
 		docker = occam.NewDocker()
 	})
 
-	context("when the buildpack is run with pack build", func() {
+	context("when the buildpack runs with pack build", func() {
 		var (
 			image     occam.Image
 			container occam.Container
