@@ -17,7 +17,7 @@ import (
 
 var settings struct {
 	Buildpacks struct {
-		NodeExtension struct {
+		NPMInstall struct {
 			Online string
 		}
 		NodeEngine struct {
@@ -33,6 +33,12 @@ var settings struct {
 		}
 	}
 
+	Extensions struct {
+		UbiNodejsExtension struct {
+			Online string
+		}
+	}
+
 	Extension struct {
 		ID   string
 		Name string
@@ -44,6 +50,7 @@ var settings struct {
 	Config struct {
 		BuildPlan  string `json:"build-plan"`
 		NodeEngine string `json:"node-engine"`
+		NPMInstall string `json:"npm-install"`
 	}
 }
 
@@ -68,7 +75,7 @@ func TestIntegration(t *testing.T) {
 	root, err := filepath.Abs("./..")
 	Expect(err).ToNot(HaveOccurred())
 
-	settings.Buildpacks.NodeExtension.Online, err = buildpackStore.Get.
+	settings.Extensions.UbiNodejsExtension.Online, err = buildpackStore.Get.
 		WithVersion("1.2.3").
 		Execute(root)
 	Expect(err).NotTo(HaveOccurred())
@@ -82,12 +89,18 @@ func TestIntegration(t *testing.T) {
 		Execute(settings.Config.NodeEngine)
 	Expect(err).NotTo(HaveOccurred())
 
+	settings.Buildpacks.NPMInstall.Online, err = buildpackStore.Get.
+		WithVersion("1.2.3").
+		Execute(settings.Config.NPMInstall)
+	Expect(err).NotTo(HaveOccurred())
+
 	settings.Buildpacks.Processes.Online = filepath.Join("testdata", "processes_buildpack")
 
 	SetDefaultEventuallyTimeout(5 * time.Second)
 
 	suite := spec.New("Integration", spec.Report(report.Terminal{}), spec.Parallel())
 	suite("FetchRunImageFromEnv", testFetchRunImageFromEnv)
+	suite("Vendored", testVendored)
 	suite("OpenSSL", testOpenSSL)
 	suite("OptimizeMemory", testOptimizeMemory)
 	suite("ProjectPath", testProjectPath)
