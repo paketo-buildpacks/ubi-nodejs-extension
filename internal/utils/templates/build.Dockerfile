@@ -9,6 +9,10 @@ RUN echo ${build_id}
 RUN microdnf -y module enable nodejs:{{.NODEJS_VERSION}}
 RUN microdnf --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install -y {{.PACKAGES}} && microdnf clean all
 
+{{- if .SET_SYMLINKS}}
+{{.SET_SYMLINKS}}
+{{- end}}
+
 RUN echo uid:gid "{{.CNB_USER_ID}}:{{.CNB_GROUP_ID}}"
 USER {{.CNB_USER_ID}}:{{.CNB_GROUP_ID}}
 

@@ -1,0 +1,20 @@
+{
+  "name": "vendored",
+  "version": "0.0.1",
+  "description": "some app",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "node": "~24"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0"
+  }
+}

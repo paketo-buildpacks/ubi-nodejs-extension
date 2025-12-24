@@ -69,7 +69,7 @@ func testSimple(t *testing.T, context spec.G, it spec.S) {
 				var logs fmt.Stringer
 				image, logs, err = pack.WithNoColor().Build.
 					WithExtensions(
-						settings.Buildpacks.NodeExtension.Online,
+						settings.Extensions.UbiNodejsExtension.Online,
 					).
 					WithBuildpacks(
 						settings.Buildpacks.NodeEngine.Online,
@@ -162,7 +162,7 @@ func testSimple(t *testing.T, context spec.G, it spec.S) {
 				image, logs, err = pack.WithNoColor().Build.
 					WithEnv(map[string]string{"NODE_ENV": "development", "NODE_VERBOSE": "true"}).
 					WithExtensions(
-						settings.Buildpacks.NodeExtension.Online,
+						settings.Extensions.UbiNodejsExtension.Online,
 					).
 					WithBuildpacks(
 						settings.Buildpacks.NodeEngine.Online,
@@ -239,7 +239,7 @@ func testSimple(t *testing.T, context spec.G, it spec.S) {
 				var logs fmt.Stringer
 				image, logs, err = pack.WithNoColor().Build.
 					WithExtensions(
-						settings.Buildpacks.NodeExtension.Online,
+						settings.Extensions.UbiNodejsExtension.Online,
 					).
 					WithBuildpacks(
 						settings.Buildpacks.NodeEngine.Online,
@@ -329,7 +329,7 @@ func testSimple(t *testing.T, context spec.G, it spec.S) {
 				var logs fmt.Stringer
 				image, logs, err = pack.WithNoColor().Build.
 					WithExtensions(
-						settings.Buildpacks.NodeExtension.Online,
+						settings.Extensions.UbiNodejsExtension.Online,
 					).
 					WithBuildpacks(
 						settings.Buildpacks.NodeEngine.Online,
@@ -429,7 +429,7 @@ func testSimple(t *testing.T, context spec.G, it spec.S) {
 			var logs fmt.Stringer
 			_, logs, err = pack.WithNoColor().Build.
 				WithExtensions(
-					settings.Buildpacks.NodeExtension.Online,
+					settings.Extensions.UbiNodejsExtension.Online,
 				).
 				WithBuildpacks(
 					settings.Buildpacks.NodeEngine.Online,

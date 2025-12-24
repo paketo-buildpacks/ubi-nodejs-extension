@@ -202,12 +202,14 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 
 				requiredPackagesForBuild, err := utils.GetBuildPackages("io.buildpacks.stacks.ubi8", tt.expectedNodeVersion)
 				Expect(err).NotTo(HaveOccurred())
+				setSymlinks := utils.GetSymlinks("io.buildpacks.stacks.ubi8", tt.expectedNodeVersion)
 				buildDockerfileProps := structs.BuildDockerfileProps{
 					CNB_USER_ID:    1002,
 					CNB_GROUP_ID:   1000,
 					CNB_STACK_ID:   "io.buildpacks.stacks.ubi8",
 					PACKAGES:       requiredPackagesForBuild,
 					NODEJS_VERSION: uint64(tt.expectedNodeVersion),
+					SET_SYMLINKS:   setSymlinks,
 				}
 
 				buildDockerfileContent, _ := utils.GenerateBuildDockerfile(buildDockerfileProps)
@@ -289,12 +291,14 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 				requiredPackagesForBuild, err := utils.GetBuildPackages("io.buildpacks.stacks.ubi8", tt.expectedNodeVersion)
 				Expect(err).NotTo(HaveOccurred())
 				runDockerfileContent, _ := utils.GenerateRunDockerfile(runDockerFileProps)
+				setSymlinks := utils.GetSymlinks("io.buildpacks.stacks.ubi8", tt.expectedNodeVersion)
 				buildDockerfileProps := structs.BuildDockerfileProps{
 					CNB_USER_ID:    1002,
 					CNB_GROUP_ID:   1000,
 					CNB_STACK_ID:   "io.buildpacks.stacks.ubi8",
 					PACKAGES:       requiredPackagesForBuild,
 					NODEJS_VERSION: uint64(tt.expectedNodeVersion),
+					SET_SYMLINKS:   setSymlinks,
 				}
 
 				buildDockerfileContent, _ := utils.GenerateBuildDockerfile(buildDockerfileProps)
@@ -367,12 +371,14 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 				requiredPackagesForBuild, err := utils.GetBuildPackages("io.buildpacks.stacks.ubi8", tt.expectedNodeVersion)
 				Expect(err).NotTo(HaveOccurred())
 
+				setSymlinks := utils.GetSymlinks("io.buildpacks.stacks.ubi8", tt.expectedNodeVersion)
 				buildDockerfileProps := structs.BuildDockerfileProps{
 					CNB_USER_ID:    1002,
 					CNB_GROUP_ID:   1000,
 					CNB_STACK_ID:   "io.buildpacks.stacks.ubi8",
 					PACKAGES:       requiredPackagesForBuild,
 					NODEJS_VERSION: uint64(tt.expectedNodeVersion),
+					SET_SYMLINKS:   setSymlinks,
 				}
 
 				buildDockerfileContent, _ := utils.GenerateBuildDockerfile(buildDockerfileProps)
