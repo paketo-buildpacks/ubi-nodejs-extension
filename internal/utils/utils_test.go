@@ -579,7 +579,7 @@ func testGetBuildPackages(t *testing.T, context spec.G, it spec.S) {
 				{
 					stackId:          "io.buildpacks.stacks.ubi8",
 					nodeVersion:      22,
-					expectedPackages: "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3.12",
+					expectedPackages: "make gcc-toolset-13-gcc gcc-toolset-13-gcc-c++ gcc-toolset-13-runtime libatomic_ops git openssl-devel python3.12 nodejs npm nodejs-nodemon nss_wrapper-libs which",
 					description:      "UBI8 with Node.js 22 (uses GCC toolset 13)",
 				},
 			}

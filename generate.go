@@ -79,6 +79,8 @@ func Generate(dependencyManager DependencyManager, logger scribe.Emitter, during
 			return packit.GenerateResult{}, err
 		}
 
+		setSymlinks := utils.GetSymlinks(context.Stack, int(selectedNodeMajorVersion))
+
 		// Generating build.Dockerfile
 		buildDockerfileContent, err := utils.GenerateBuildDockerfile(structs.BuildDockerfileProps{
 			NODEJS_VERSION: selectedNodeMajorVersion,
@@ -86,6 +88,7 @@ func Generate(dependencyManager DependencyManager, logger scribe.Emitter, during
 			CNB_GROUP_ID:   duringBuildPermissions.CNB_GROUP_ID,
 			CNB_STACK_ID:   context.Stack,
 			PACKAGES:       requiredPackagesForBuild,
+			SET_SYMLINKS:   setSymlinks,
 		})
 
 		if err != nil {

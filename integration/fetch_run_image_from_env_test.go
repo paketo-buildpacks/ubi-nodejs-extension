@@ -44,7 +44,7 @@ func testFetchRunImageFromEnv(t *testing.T, context spec.G, it spec.S) {
 			var logs fmt.Stringer
 			_, logs, err = pack.WithNoColor().Build.
 				WithExtensions(
-					settings.Buildpacks.NodeExtension.Online,
+					settings.Extensions.UbiNodejsExtension.Online,
 				).
 				WithBuildpacks(
 					settings.Buildpacks.NodeEngine.Online,
