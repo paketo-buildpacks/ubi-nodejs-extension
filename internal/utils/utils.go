@@ -236,6 +236,14 @@ func fillPropsToTemplate(properties any, templateString string) (result string, 
 	return buf.String(), nil
 }
 
+func GetSymlinks(imageId string, nodeVersion int) string {
+	if imageId == "io.buildpacks.stacks.ubi8" && (nodeVersion == 24 || nodeVersion == 22) {
+		return `RUN ln -sf /opt/rh/gcc-toolset-13/root/usr/bin/gcc /usr/bin/gcc && \
+    ln -sf /opt/rh/gcc-toolset-13/root/usr/bin/g++ /usr/bin/g++`
+	}
+	return ""
+}
+
 func GetBuildPackages(imageId string, nodeVersion int) (string, error) {
 
 	switch imageId {
@@ -244,9 +252,9 @@ func GetBuildPackages(imageId string, nodeVersion int) (string, error) {
 		case 16, 18, 20:
 			return "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3", nil
 		case 22:
-			return "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3.12", nil
+			return "make gcc-toolset-13-gcc gcc-toolset-13-gcc-c++ gcc-toolset-13-runtime libatomic_ops git openssl-devel python3.12 nodejs npm nodejs-nodemon nss_wrapper-libs which", nil
 		case 24:
-			return "make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3.12", nil
+			return "make gcc-toolset-13-gcc gcc-toolset-13-gcc-c++ gcc-toolset-13-runtime libatomic_ops git openssl-devel python3.12 nodejs npm nodejs-nodemon nss_wrapper-libs which", nil
 		default:
 			return "", fmt.Errorf("unsupported Node.js version %d for image %s", nodeVersion, imageId)
 		}
