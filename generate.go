@@ -83,12 +83,13 @@ func Generate(dependencyManager DependencyManager, logger scribe.Emitter, during
 
 		// Generating build.Dockerfile
 		buildDockerfileContent, err := utils.GenerateBuildDockerfile(structs.BuildDockerfileProps{
-			NODEJS_VERSION: selectedNodeMajorVersion,
-			CNB_USER_ID:    duringBuildPermissions.CNB_USER_ID,
-			CNB_GROUP_ID:   duringBuildPermissions.CNB_GROUP_ID,
-			CNB_STACK_ID:   context.Stack,
-			PACKAGES:       requiredPackagesForBuild,
-			SET_SYMLINKS:   setSymlinks,
+			NODEJS_VERSION:       selectedNodeMajorVersion,
+			CNB_USER_ID:          duringBuildPermissions.CNB_USER_ID,
+			CNB_GROUP_ID:         duringBuildPermissions.CNB_GROUP_ID,
+			CNB_STACK_ID:         context.Stack,
+			PACKAGES:             requiredPackagesForBuild,
+			SET_SYMLINKS:         setSymlinks,
+			ENABLE_NODEJS_MODULE: utils.ShouldEnableNodejsModule(context.Stack),
 		})
 
 		if err != nil {

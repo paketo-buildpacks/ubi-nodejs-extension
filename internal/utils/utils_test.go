@@ -410,11 +410,12 @@ func testGenerateBuildDockerfile(t *testing.T, context spec.G, it spec.S) {
 			Expect(err).NotTo(HaveOccurred())
 
 			output, err := utils.GenerateBuildDockerfile(structs.BuildDockerfileProps{
-				NODEJS_VERSION: 16,
-				CNB_USER_ID:    1000,
-				CNB_GROUP_ID:   1000,
-				CNB_STACK_ID:   "io.buildpacks.stacks.ubi8",
-				PACKAGES:       getInstalledPackages,
+				NODEJS_VERSION:       16,
+				CNB_USER_ID:          1000,
+				CNB_GROUP_ID:         1000,
+				CNB_STACK_ID:         "io.buildpacks.stacks.ubi8",
+				PACKAGES:             getInstalledPackages,
+				ENABLE_NODEJS_MODULE: utils.ShouldEnableNodejsModule("io.buildpacks.stacks.ubi8"),
 			})
 
 			Expect(err).NotTo(HaveOccurred())
@@ -425,7 +426,6 @@ USER root
 
 ARG build_id=0
 RUN echo ${build_id}
-
 RUN microdnf -y module enable nodejs:16
 RUN microdnf --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install -y %s && microdnf clean all
 

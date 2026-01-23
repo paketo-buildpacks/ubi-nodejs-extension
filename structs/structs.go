@@ -9,6 +9,7 @@ type BuildDockerfileProps struct {
 	CNB_USER_ID, CNB_GROUP_ID int
 	CNB_STACK_ID, PACKAGES    string
 	SET_SYMLINKS              string
+	ENABLE_NODEJS_MODULE      bool
 }
 
 type RunDockerfileProps struct {
