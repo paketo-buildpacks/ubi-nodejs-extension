@@ -6,8 +6,10 @@ USER root
 ARG build_id=0
 RUN echo ${build_id}
 
+{{- if .ENABLE_NODEJS_MODULE}}
 RUN microdnf -y module enable nodejs:{{.NODEJS_VERSION}}
-RUN microdnf --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install -y {{.PACKAGES}} && microdnf clean all
+{{- end}}
+RUN microdnf --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install -y {{.PACKAGES}} && microdnf clean all 
 
 {{- if .SET_SYMLINKS}}
 {{.SET_SYMLINKS}}

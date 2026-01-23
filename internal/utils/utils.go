@@ -240,6 +240,14 @@ func GetSymlinks(imageId string, nodeVersion int) string {
 	if imageId == "io.buildpacks.stacks.ubi8" && (nodeVersion == 24 || nodeVersion == 22) {
 		return `RUN ln -sf /opt/rh/gcc-toolset-13/root/usr/bin/gcc /usr/bin/gcc && \
     ln -sf /opt/rh/gcc-toolset-13/root/usr/bin/g++ /usr/bin/g++`
+	} else if imageId == "io.buildpacks.stacks.ubi10" && (nodeVersion == 24) {
+		return `RUN ln -s /usr/bin/node-24 /usr/bin/node && \
+ln -s /usr/bin/npm-24 /usr/bin/npm && \
+ln -s /usr/bin/npx-24 /usr/bin/npx`
+	} else if imageId == "io.buildpacks.stacks.ubi10" && (nodeVersion == 22) {
+		return `RUN rm /usr/bin/node && ln -s /usr/bin/node-22 /usr/bin/node && \
+rm /usr/bin/npm && ln -s /usr/bin/npm-22 /usr/bin/npm && \
+rm /usr/bin/npx && ln -s /usr/bin/npx-22 /usr/bin/npx`
 	}
 	return ""
 }
@@ -265,6 +273,15 @@ func GetBuildPackages(imageId string, nodeVersion int) (string, error) {
 		default:
 			return "", fmt.Errorf("unsupported Node.js version %d for image %s", nodeVersion, imageId)
 		}
+	case "io.buildpacks.stacks.ubi10":
+		switch nodeVersion {
+		case 22:
+			return "make gcc gcc-c++ git openssl-devel nodejs nodejs-nodemon nodejs-npm nss_wrapper-libs which", nil
+		case 24:
+			return "make gcc gcc-c++ git openssl-devel nodejs24 nodejs-nodemon nodejs24-npm nss_wrapper-libs which", nil
+		default:
+			return "", fmt.Errorf("unsupported Node.js version %d for image %s", nodeVersion, imageId)
+		}
 	}
 
 	return "", fmt.Errorf("unsupported image ID: %s", imageId)
@@ -284,4 +301,15 @@ func GetOsCodenameFromStackId(stackId string) (string, error) {
 	}
 
 	return osCodename, nil
+}
+
+func ShouldEnableNodejsModule(stackId string) bool {
+	switch stackId {
+	case "io.buildpacks.stacks.ubi8", "io.buildpacks.stacks.ubi9":
+		return true
+	case "io.buildpacks.stacks.ubi10":
+		return false
+	default:
+		return true
+	}
 }

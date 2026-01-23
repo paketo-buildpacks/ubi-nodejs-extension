@@ -204,12 +204,13 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 				Expect(err).NotTo(HaveOccurred())
 				setSymlinks := utils.GetSymlinks("io.buildpacks.stacks.ubi8", tt.expectedNodeVersion)
 				buildDockerfileProps := structs.BuildDockerfileProps{
-					CNB_USER_ID:    1002,
-					CNB_GROUP_ID:   1000,
-					CNB_STACK_ID:   "io.buildpacks.stacks.ubi8",
-					PACKAGES:       requiredPackagesForBuild,
-					NODEJS_VERSION: uint64(tt.expectedNodeVersion),
-					SET_SYMLINKS:   setSymlinks,
+					CNB_USER_ID:          1002,
+					CNB_GROUP_ID:         1000,
+					CNB_STACK_ID:         "io.buildpacks.stacks.ubi8",
+					PACKAGES:             requiredPackagesForBuild,
+					NODEJS_VERSION:       uint64(tt.expectedNodeVersion),
+					SET_SYMLINKS:         setSymlinks,
+					ENABLE_NODEJS_MODULE: utils.ShouldEnableNodejsModule("io.buildpacks.stacks.ubi8"),
 				}
 
 				buildDockerfileContent, _ := utils.GenerateBuildDockerfile(buildDockerfileProps)
@@ -293,12 +294,13 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 				runDockerfileContent, _ := utils.GenerateRunDockerfile(runDockerFileProps)
 				setSymlinks := utils.GetSymlinks("io.buildpacks.stacks.ubi8", tt.expectedNodeVersion)
 				buildDockerfileProps := structs.BuildDockerfileProps{
-					CNB_USER_ID:    1002,
-					CNB_GROUP_ID:   1000,
-					CNB_STACK_ID:   "io.buildpacks.stacks.ubi8",
-					PACKAGES:       requiredPackagesForBuild,
-					NODEJS_VERSION: uint64(tt.expectedNodeVersion),
-					SET_SYMLINKS:   setSymlinks,
+					CNB_USER_ID:          1002,
+					CNB_GROUP_ID:         1000,
+					CNB_STACK_ID:         "io.buildpacks.stacks.ubi8",
+					PACKAGES:             requiredPackagesForBuild,
+					NODEJS_VERSION:       uint64(tt.expectedNodeVersion),
+					SET_SYMLINKS:         setSymlinks,
+					ENABLE_NODEJS_MODULE: utils.ShouldEnableNodejsModule("io.buildpacks.stacks.ubi8"),
 				}
 
 				buildDockerfileContent, _ := utils.GenerateBuildDockerfile(buildDockerfileProps)
@@ -373,12 +375,13 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 
 				setSymlinks := utils.GetSymlinks("io.buildpacks.stacks.ubi8", tt.expectedNodeVersion)
 				buildDockerfileProps := structs.BuildDockerfileProps{
-					CNB_USER_ID:    1002,
-					CNB_GROUP_ID:   1000,
-					CNB_STACK_ID:   "io.buildpacks.stacks.ubi8",
-					PACKAGES:       requiredPackagesForBuild,
-					NODEJS_VERSION: uint64(tt.expectedNodeVersion),
-					SET_SYMLINKS:   setSymlinks,
+					CNB_USER_ID:          1002,
+					CNB_GROUP_ID:         1000,
+					CNB_STACK_ID:         "io.buildpacks.stacks.ubi8",
+					PACKAGES:             requiredPackagesForBuild,
+					NODEJS_VERSION:       uint64(tt.expectedNodeVersion),
+					SET_SYMLINKS:         setSymlinks,
+					ENABLE_NODEJS_MODULE: utils.ShouldEnableNodejsModule("io.buildpacks.stacks.ubi8"),
 				}
 
 				buildDockerfileContent, _ := utils.GenerateBuildDockerfile(buildDockerfileProps)
