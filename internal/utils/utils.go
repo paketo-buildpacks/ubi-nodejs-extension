@@ -51,12 +51,7 @@ func GenerateConfigTomlContentFromImagesJson(imagesJsonPath string, stackId stri
 		return []byte{}, err
 	}
 
-	osCodename, err := GetOsCodenameFromStackId(stackId)
-	if err != nil {
-		return []byte{}, err
-	}
-
-	configTomlContent, err := CreateConfigTomlFileContent(defaultNodeVersion, nodejsStacks, stackId, osCodename)
+	configTomlContent, err := CreateConfigTomlFileContent(defaultNodeVersion, nodejsStacks, stackId)
 	if err != nil {
 		return []byte{}, err
 	}
@@ -81,16 +76,28 @@ func GetDefaultNodeVersion(stacks []StackImages) (string, error) {
 	}
 }
 
-func CreateConfigTomlFileContent(defaultNodeVersion string, nodejsStacks []StackImages, stackId string, osCodename string) (bytes.Buffer, error) {
+func CreateConfigTomlFileContent(defaultNodeVersion string, nodejsStacks []StackImages, stackId string) (bytes.Buffer, error) {
+
+	osCodename, err := GetOsCodenameFromStackId(stackId)
+	if err != nil {
+		return bytes.Buffer{}, err
+	}
 
 	var dependencies []map[string]interface{}
 
 	for _, stack := range nodejsStacks {
+		var source string
+		if stackId == "io.buildpacks.stacks.ubi8" || stackId == "io.buildpacks.stacks.ubi9" {
+			source = fmt.Sprintf("paketobuildpacks/run-nodejs-%s-%s-base", stack.NodeVersion, osCodename)
+		} else {
+			osCodenameVersion := strings.Split(osCodename, "ubi")[1]
+			source = fmt.Sprintf("paketobuildpacks/ubi-%s-run-nodejs-%s-base", osCodenameVersion, stack.NodeVersion)
+		}
 		dependency := map[string]interface{}{
 			"id":      "node",
 			"stacks":  []string{stackId},
 			"version": fmt.Sprintf("%s.1000", stack.NodeVersion),
-			"source":  fmt.Sprintf("paketobuildpacks/run-nodejs-%s-%s-base", stack.NodeVersion, osCodename),
+			"source":  source,
 		}
 		dependencies = append(dependencies, dependency)
 	}
