@@ -38,7 +38,7 @@ func testGenerateConfigTomlContentFromImagesJson(t *testing.T, context spec.G, i
 			imagesJsonPath := filepath.Join(imagesJsonTmpDir, "images.json")
 			Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
 
-			configTomlContent, err := utils.GenerateConfigTomlContentFromImagesJson(imagesJsonPath, "io.buildpacks.stacks.ubix")
+			configTomlContent, err := utils.GenerateConfigTomlContentFromImagesJson(imagesJsonPath, "io.buildpacks.stacks.ubi9")
 
 			Expect(err).ToNot(HaveOccurred())
 			Expect(string(configTomlContent)).To(ContainSubstring(`[metadata]
@@ -47,20 +47,20 @@ func testGenerateConfigTomlContentFromImagesJson(t *testing.T, context spec.G, i
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketobuildpacks/run-nodejs-16-ubix-base"
-    stacks = ["io.buildpacks.stacks.ubix"]
+    source = "paketobuildpacks/run-nodejs-16-ubi9-base"
+    stacks = ["io.buildpacks.stacks.ubi9"]
     version = "16.1000"
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketobuildpacks/run-nodejs-18-ubix-base"
-    stacks = ["io.buildpacks.stacks.ubix"]
+    source = "paketobuildpacks/run-nodejs-18-ubi9-base"
+    stacks = ["io.buildpacks.stacks.ubi9"]
     version = "18.1000"
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketobuildpacks/run-nodejs-20-ubix-base"
-    stacks = ["io.buildpacks.stacks.ubix"]
+    source = "paketobuildpacks/run-nodejs-20-ubi9-base"
+    stacks = ["io.buildpacks.stacks.ubi9"]
     version = "20.1000"`))
 		})
 	})
@@ -162,7 +162,6 @@ func testCreateConfigTomlFileContent(t *testing.T, context spec.G, it spec.S) {
 	)
 
 	context("When passing data properly to CreateConfigTomlFileContent function", func() {
-
 		it("successfly create the content of config.toml", func() {
 			configTomlFileContent, err := utils.CreateConfigTomlFileContent("22", []utils.StackImages{
 				{
@@ -173,9 +172,9 @@ func testCreateConfigTomlFileContent(t *testing.T, context spec.G, it spec.S) {
 				{
 					Name:              "nodejs-20",
 					IsDefaultRunImage: false,
-					NodeVersion:       "20",
+					NodeVersion:       "24",
 				},
-			}, "io.buildpacks.stacks.ubix", "ubi8")
+			}, "io.buildpacks.stacks.ubi10")
 
 			Expect(err).ToNot(HaveOccurred())
 			Expect(configTomlFileContent.String()).To(ContainSubstring(`[metadata]
@@ -184,15 +183,15 @@ func testCreateConfigTomlFileContent(t *testing.T, context spec.G, it spec.S) {
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketobuildpacks/run-nodejs-22-ubi8-base"
-    stacks = ["io.buildpacks.stacks.ubix"]
+    source = "paketobuildpacks/ubi-10-run-nodejs-22-base"
+    stacks = ["io.buildpacks.stacks.ubi10"]
     version = "22.1000"
 
   [[metadata.dependencies]]
     id = "node"
-    source = "paketobuildpacks/run-nodejs-20-ubi8-base"
-    stacks = ["io.buildpacks.stacks.ubix"]
-    version = "20.1000"`))
+    source = "paketobuildpacks/ubi-10-run-nodejs-24-base"
+    stacks = ["io.buildpacks.stacks.ubi10"]
+    version = "24.1000"`))
 		})
 	})
 }
