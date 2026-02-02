@@ -4,6 +4,7 @@
   "npm-install": "github.com/paketo-buildpacks/npm-install",
   "builders": [
     "index.docker.io/paketobuildpacks/builder-ubi8-buildpackless-base:latest",
+    "index.docker.io/paketobuildpacks/ubi-10-builder-buildpackless:latest",
     "index.docker.io/paketobuildpacks/ubi-9-builder-buildpackless:latest"
   ]
 }

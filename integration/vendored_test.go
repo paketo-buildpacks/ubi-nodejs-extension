@@ -90,7 +90,6 @@ func testVendored(t *testing.T, context spec.G, it spec.S) {
 			Expect(err).NotTo(HaveOccurred())
 			Expect(string(content)).To(ContainSubstring("Hello, World!"))
 
-			fmt.Println(logs)
 			Expect(logs).To(ContainLines(
 				"[extender (build)]   Resolving installation process",
 				"[extender (build)]     Process inputs:",

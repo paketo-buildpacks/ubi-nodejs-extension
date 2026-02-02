@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"regexp"
 	"testing"
 
 	"github.com/paketo-buildpacks/occam"
@@ -73,27 +72,18 @@ func testProjectPath(t *testing.T, context spec.G, it spec.S) {
 				Execute(name, source)
 			Expect(err).ToNot(HaveOccurred(), logs.String)
 
-			versionPatternCandidate := regexp.MustCompile(`\.node-version -> "\d+\.\*"`)
-			versionPatternSelectedNode := regexp.MustCompile(`Selected Node Engine Major version \d+`)
-			versionPatternBuildNode := regexp.MustCompile(`nodejs:\d+`)
-			logsReplaced := versionPatternCandidate.ReplaceAllString(logs.String(), `.node-version -> "x.x"`)
-			logsReplaced = versionPatternSelectedNode.ReplaceAllString(logsReplaced, `Selected Node Engine Major version x`)
-			logsReplaced = versionPatternBuildNode.ReplaceAllString(logsReplaced, `nodejs:x`)
-
-			Expect(logsReplaced).To(ContainLines(
+			Expect(logs).To(ContainLines(
 				fmt.Sprintf("%s 1.2.3", settings.Extension.Name),
 				"  Resolving Node Engine version",
 				"    Candidate version sources (in priority order):",
-				"      .node-version -> \"x.x\"",
-				"      <unknown>     -> \"\""))
+				MatchRegexp(`      \.node-version -> "\d+\.\*"`),
+				"      <unknown>     -> \"\"",
+			))
 
-			Expect(logsReplaced).To(ContainLines(
-				"  Selected Node Engine Major version x"))
-			Expect(logsReplaced).To(ContainLines("===> RESTORING"))
-			Expect(logsReplaced).To(ContainLines("===> EXTENDING (BUILD)"))
-
-			Expect(logsReplaced).To(ContainLines("[extender (build)] Enabling module streams:",
-				"[extender (build)]     nodejs:x"))
+			Expect(logs).To(ContainLines(MatchRegexp(`  Selected Node Engine Major version \d+`)))
+			Expect(logs).To(ContainLines("===> RESTORING"))
+			Expect(logs).To(ContainLines("===> EXTENDING (BUILD)"))
+			Expect(logs).To(ContainLines(MatchRegexp(`\[extender \(build\)\]\s+nodejs(\d+)?-\d+:\d+\.\d+\.\d+`)))
 
 			container, err = docker.Container.Run.
 				WithCommand("node hello_world_server/server.js").
