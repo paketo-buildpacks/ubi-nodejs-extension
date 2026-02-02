@@ -72,9 +72,7 @@ func testProvides(t *testing.T, context spec.G, it spec.S) {
 			Expect(logs).To(ContainLines(MatchRegexp(`  Selected Node Engine Major version \d+`)))
 			Expect(logs).To(ContainLines("===> RESTORING"))
 			Expect(logs).To(ContainLines("===> EXTENDING (BUILD)"))
-			Expect(logs).To(ContainLines(
-				"[extender (build)] Enabling module streams:",
-				MatchRegexp(`\[extender \(build\)\]     nodejs:\d+`)))
+			Expect(logs).To(ContainLines(MatchRegexp(`\[extender \(build\)\]\s+nodejs(\d+)?-\d+:\d+\.\d+\.\d+`)))
 
 			// SBOM is not supported at the moment from UBI image
 			// therefore there are no available logs to test/validate
