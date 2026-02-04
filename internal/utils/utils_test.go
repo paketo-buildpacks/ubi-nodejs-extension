@@ -2,7 +2,6 @@ package utils_test
 
 import (
 	_ "embed"
-	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -33,7 +32,7 @@ func testGenerateConfigTomlContentFromImagesJson(t *testing.T, context spec.G, i
 
 		it("successfully parses images.json file and returns the config.toml content", func() {
 
-			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "20"}, []bool{false, false, true}, false)
+			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "20"}, []bool{false, false, true}, false, "9")
 			imagesJsonTmpDir := t.TempDir()
 			imagesJsonPath := filepath.Join(imagesJsonTmpDir, "images.json")
 			Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
@@ -213,7 +212,7 @@ func testParseImagesJsonFile(t *testing.T, _ spec.G, it spec.S) {
 
 	it("successfully parses images.json file", func() {
 
-		imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "20"}, []bool{false, false, true}, false)
+		imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "20"}, []bool{false, false, true}, false, "8")
 		imagesJsonTmpDir := t.TempDir()
 		imagesJsonPath := filepath.Join(imagesJsonTmpDir, "images.json")
 		Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
@@ -228,11 +227,11 @@ func testParseImagesJsonFile(t *testing.T, _ spec.G, it spec.S) {
 					IsDefaultRunImage: false,
 				},
 				{
-					Name:              "java-17",
+					Name:              "runtime-1",
 					IsDefaultRunImage: false,
 				},
 				{
-					Name:              "java-21",
+					Name:              "runtime-2",
 					IsDefaultRunImage: false,
 				},
 				{
@@ -260,7 +259,7 @@ func testParseImagesJsonFile(t *testing.T, _ spec.G, it spec.S) {
 
 	it("erros when images.json file is not a valid json", func() {
 
-		imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "20"}, []bool{false, false, true}, true)
+		imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "20"}, []bool{false, false, true}, true, "8")
 		imagesJsonTmpDir := t.TempDir()
 		imagesJsonPath := filepath.Join(imagesJsonTmpDir, "images_not_valid.json")
 		Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
@@ -362,11 +361,11 @@ func testGetNodejsStackImages(t *testing.T, context spec.G, it spec.S) {
 		it("should error with a message", func() {
 
 			imagesJsonTmpDir := t.TempDir()
-			imagesJsonNodeVersionNotIntegerContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "hello"}, []bool{false, false, true}, false)
+			imagesJsonNodeVersionNotIntegerContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "hello"}, []bool{false, false, true}, false, "8")
 			imagesJsonNodeVersionNotIntegerPath := filepath.Join(imagesJsonTmpDir, "images_node_version_not_integer.json")
 			Expect(os.WriteFile(imagesJsonNodeVersionNotIntegerPath, []byte(imagesJsonNodeVersionNotIntegerContent), 0600)).To(Succeed())
 
-			imagesJsonNoNodeVersionContent := testhelpers.GenerateImagesJsonFile([]string{"16", "", "20"}, []bool{false, false, true}, false)
+			imagesJsonNoNodeVersionContent := testhelpers.GenerateImagesJsonFile([]string{"16", "", "20"}, []bool{false, false, true}, false, "8")
 			imagesJsonNoNodeVersionPath := filepath.Join(imagesJsonTmpDir, "images_no_node_version.json")
 			Expect(os.WriteFile(imagesJsonNoNodeVersionPath, []byte(imagesJsonNoNodeVersionContent), 0600)).To(Succeed())
 
@@ -418,23 +417,25 @@ func testGenerateBuildDockerfile(t *testing.T, context spec.G, it spec.S) {
 			})
 
 			Expect(err).NotTo(HaveOccurred())
-			Expect(output).To(Equal(fmt.Sprintf(`ARG base_image
+			expectedOutput := `ARG base_image
 FROM ${base_image}
 
 USER root
 
 ARG build_id=0
 RUN echo ${build_id}
-RUN microdnf -y module enable nodejs:16
-RUN microdnf --setopt=install_weak_deps=0 --setopt=tsflags=nodocs install -y %s && microdnf clean all
+
+RUN microdnf -y module enable nodejs:16 && microdnf --setopt=install_weak_deps=0 --setopt=tsflags=nodocs \
+    install -y make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3 && \
+    microdnf clean all
 
 RUN echo uid:gid "1000:1000"
 USER 1000:1000
 
-RUN echo "CNB_STACK_ID: io.buildpacks.stacks.ubi8"`, getInstalledPackages)))
+RUN echo "CNB_STACK_ID: io.buildpacks.stacks.ubi8"`
+			Expect(output).To(Equal(expectedOutput))
 
 		})
-
 	})
 }
 
