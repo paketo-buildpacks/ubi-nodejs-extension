@@ -245,14 +245,14 @@ func fillPropsToTemplate(properties any, templateString string) (result string, 
 
 func GetSymlinks(imageId string, nodeVersion int) string {
 	if imageId == "io.buildpacks.stacks.ubi8" && (nodeVersion == 24 || nodeVersion == 22) {
-		return `RUN ln -sf /opt/rh/gcc-toolset-13/root/usr/bin/gcc /usr/bin/gcc && \
+		return `ln -sf /opt/rh/gcc-toolset-13/root/usr/bin/gcc /usr/bin/gcc && \
     ln -sf /opt/rh/gcc-toolset-13/root/usr/bin/g++ /usr/bin/g++`
 	} else if imageId == "io.buildpacks.stacks.ubi10" && (nodeVersion == 24) {
-		return `RUN ln -s /usr/bin/node-24 /usr/bin/node && \
+		return `ln -s /usr/bin/node-24 /usr/bin/node && \
 ln -s /usr/bin/npm-24 /usr/bin/npm && \
 ln -s /usr/bin/npx-24 /usr/bin/npx`
 	} else if imageId == "io.buildpacks.stacks.ubi10" && (nodeVersion == 22) {
-		return `RUN rm /usr/bin/node && ln -s /usr/bin/node-22 /usr/bin/node && \
+		return `rm /usr/bin/node && ln -s /usr/bin/node-22 /usr/bin/node && \
 rm /usr/bin/npm && ln -s /usr/bin/npm-22 /usr/bin/npm && \
 rm /usr/bin/npx && ln -s /usr/bin/npx-22 /usr/bin/npx`
 	}
