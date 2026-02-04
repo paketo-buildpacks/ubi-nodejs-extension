@@ -33,7 +33,7 @@ func testGenerateConfigTomlContentFromImagesJson(t *testing.T, context spec.G, i
 
 		it("successfully parses images.json file and returns the config.toml content", func() {
 
-			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "20"}, []bool{false, false, true}, false)
+			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "20"}, []bool{false, false, true}, false, "9")
 			imagesJsonTmpDir := t.TempDir()
 			imagesJsonPath := filepath.Join(imagesJsonTmpDir, "images.json")
 			Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
@@ -213,7 +213,7 @@ func testParseImagesJsonFile(t *testing.T, _ spec.G, it spec.S) {
 
 	it("successfully parses images.json file", func() {
 
-		imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "20"}, []bool{false, false, true}, false)
+		imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "20"}, []bool{false, false, true}, false, "8")
 		imagesJsonTmpDir := t.TempDir()
 		imagesJsonPath := filepath.Join(imagesJsonTmpDir, "images.json")
 		Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
@@ -228,11 +228,11 @@ func testParseImagesJsonFile(t *testing.T, _ spec.G, it spec.S) {
 					IsDefaultRunImage: false,
 				},
 				{
-					Name:              "java-17",
+					Name:              "runtime-1",
 					IsDefaultRunImage: false,
 				},
 				{
-					Name:              "java-21",
+					Name:              "runtime-2",
 					IsDefaultRunImage: false,
 				},
 				{
@@ -260,7 +260,7 @@ func testParseImagesJsonFile(t *testing.T, _ spec.G, it spec.S) {
 
 	it("erros when images.json file is not a valid json", func() {
 
-		imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "20"}, []bool{false, false, true}, true)
+		imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "20"}, []bool{false, false, true}, true, "8")
 		imagesJsonTmpDir := t.TempDir()
 		imagesJsonPath := filepath.Join(imagesJsonTmpDir, "images_not_valid.json")
 		Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
@@ -362,11 +362,11 @@ func testGetNodejsStackImages(t *testing.T, context spec.G, it spec.S) {
 		it("should error with a message", func() {
 
 			imagesJsonTmpDir := t.TempDir()
-			imagesJsonNodeVersionNotIntegerContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "hello"}, []bool{false, false, true}, false)
+			imagesJsonNodeVersionNotIntegerContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18", "hello"}, []bool{false, false, true}, false, "8")
 			imagesJsonNodeVersionNotIntegerPath := filepath.Join(imagesJsonTmpDir, "images_node_version_not_integer.json")
 			Expect(os.WriteFile(imagesJsonNodeVersionNotIntegerPath, []byte(imagesJsonNodeVersionNotIntegerContent), 0600)).To(Succeed())
 
-			imagesJsonNoNodeVersionContent := testhelpers.GenerateImagesJsonFile([]string{"16", "", "20"}, []bool{false, false, true}, false)
+			imagesJsonNoNodeVersionContent := testhelpers.GenerateImagesJsonFile([]string{"16", "", "20"}, []bool{false, false, true}, false, "8")
 			imagesJsonNoNodeVersionPath := filepath.Join(imagesJsonTmpDir, "images_no_node_version.json")
 			Expect(os.WriteFile(imagesJsonNoNodeVersionPath, []byte(imagesJsonNoNodeVersionContent), 0600)).To(Succeed())
 

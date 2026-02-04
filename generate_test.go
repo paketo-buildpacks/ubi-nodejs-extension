@@ -110,7 +110,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 
 		it("Specific version of node requested", func() {
 
-			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{false, true}, false)
+			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{false, true}, false, "8")
 			imagesJsonTmpDir = t.TempDir()
 			imagesJsonPath = filepath.Join(imagesJsonTmpDir, "images.json")
 			Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
@@ -227,7 +227,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 
 		it("should return the default when node version has NOT been requested", func() {
 
-			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{true, false}, false)
+			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{true, false}, false, "8")
 			imagesJsonTmpDir = t.TempDir()
 			imagesJsonPath = filepath.Join(imagesJsonTmpDir, "images.json")
 			Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
@@ -317,7 +317,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 
 		it("should return the higher node version when it requests for >=nodeVersion", func() {
 
-			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{false, true}, false)
+			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{false, true}, false, "8")
 			imagesJsonTmpDir = t.TempDir()
 			imagesJsonPath = filepath.Join(imagesJsonTmpDir, "images.json")
 			Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
@@ -397,7 +397,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 
 		it("Should error on below cases of requested node", func() {
 
-			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{false, true}, false)
+			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{false, true}, false, "8")
 			imagesJsonTmpDir = t.TempDir()
 			imagesJsonPath = filepath.Join(imagesJsonTmpDir, "images.json")
 			Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
@@ -486,7 +486,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 
 		it("Should respect the priorities and return the proper Node.js version", func() {
 
-			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{false, true}, false)
+			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{false, true}, false, "8")
 			imagesJsonTmpDir = t.TempDir()
 			imagesJsonPath = filepath.Join(imagesJsonTmpDir, "images.json")
 			Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
@@ -604,7 +604,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 
 		it("Should have the same value as the BP_UBI_RUN_IMAGE_OVERRIDE if is not empty string", func() {
 
-			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{false, true}, false)
+			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{false, true}, false, "8")
 			imagesJsonTmpDir = t.TempDir()
 			imagesJsonPath = filepath.Join(imagesJsonTmpDir, "images.json")
 			Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
@@ -659,7 +659,7 @@ func testGenerate(t *testing.T, context spec.G, it spec.S) {
 
 		it("Should fallback to the run image which corresponds to the selected node version during build", func() {
 
-			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{false, true}, false)
+			imagesJsonContent := testhelpers.GenerateImagesJsonFile([]string{"16", "18"}, []bool{false, true}, false, "8")
 			imagesJsonTmpDir = t.TempDir()
 			imagesJsonPath = filepath.Join(imagesJsonTmpDir, "images.json")
 			Expect(os.WriteFile(imagesJsonPath, []byte(imagesJsonContent), 0644)).To(Succeed())
