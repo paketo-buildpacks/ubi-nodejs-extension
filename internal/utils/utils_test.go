@@ -2,7 +2,6 @@ package utils_test
 
 import (
 	_ "embed"
-	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
@@ -426,7 +425,7 @@ USER root
 ARG build_id=0
 RUN echo ${build_id}
 
-RUN microdnf -y module enable nodejs:16 && \ microdnf --setopt=install_weak_deps=0 --setopt=tsflags=nodocs \
+RUN microdnf -y module enable nodejs:16 && microdnf --setopt=install_weak_deps=0 --setopt=tsflags=nodocs \
     install -y make gcc gcc-c++ libatomic_ops git openssl-devel nodejs npm nodejs-nodemon nss_wrapper which python3 && \
     microdnf clean all
 
